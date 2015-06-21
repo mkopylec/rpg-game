@@ -1,0 +1,18 @@
+group 'com.github.mkopylec'
+version '1.0'
+
+apply plugin: 'java'
+
+sourceCompatibility = 1.8
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    compile group: 'org.springframework.boot', name: 'spring-boot-starter-jersey', version: '+'
+    compile group: 'org.springframework.boot', name: 'spring-boot-starter-data-mongodb', version: '+'
+    compile group: 'com.google.guava', name: 'guava', version: '+'
+    compile group: 'org.apache.commons', name: 'commons-lang3', version: '+'
+    compile group: 'org.apache.commons', name: 'commons-collections4', version: '+'
+}
