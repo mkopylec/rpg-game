@@ -24,7 +24,7 @@ public class WorldInfo {
         enemyLocations.add(location);
     }
 
-    protected static WorldInfo fromWorld(World world) {
+    static WorldInfo fromWorld(World world) {
         return new WorldInfo(
                 world.getId(),
                 world.getWidth(),
