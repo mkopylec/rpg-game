@@ -11,14 +11,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import static com.github.mkopylec.rpggame.application.WorldInfo.fromWorld;
 
 @ApplicationService
-public class GameService {
+public class GameSettingsService {
 
     private final HeroRepository heroRepository;
     private final WorldFactory worldFactory;
     private final WorldRepository worldRepository;
 
     @Autowired
-    public GameService(HeroRepository heroRepository, WorldFactory worldFactory, WorldRepository worldRepository) {
+    public GameSettingsService(HeroRepository heroRepository, WorldFactory worldFactory, WorldRepository worldRepository) {
         this.heroRepository = heroRepository;
         this.worldFactory = worldFactory;
         this.worldRepository = worldRepository;

@@ -16,7 +16,7 @@ import java.util.List;
 import java.util.UUID;
 
 @ApplicationService
-public class PlayerActionService {
+public class InGameActionsService {
 
     private final WorldRepository worldRepository;
     private final HeroRepository heroRepository;
@@ -24,7 +24,7 @@ public class PlayerActionService {
     private final BattleSimulator battleSimulator;
 
     @Autowired
-    public PlayerActionService(
+    public InGameActionsService(
             WorldRepository worldRepository,
             HeroRepository heroRepository,
             HeroExplorationHandler explorationHandler,
