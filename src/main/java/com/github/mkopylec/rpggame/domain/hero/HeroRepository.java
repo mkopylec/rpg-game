@@ -1,4 +1,4 @@
-package com.github.mkopylec.rpggame.domain.characters;
+package com.github.mkopylec.rpggame.domain.hero;
 
 import com.github.mkopylec.ddd.buildingblocks.Repository;
 import org.springframework.data.mongodb.repository.MongoRepository;

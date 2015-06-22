@@ -1,13 +1,10 @@
-package com.github.mkopylec.rpggame.domain.characters;
+package com.github.mkopylec.rpggame.domain.world;
 
-import com.github.mkopylec.ddd.buildingblocks.AggregateRoot;
 import com.github.mkopylec.ddd.buildingblocks.Entity;
-import com.github.mkopylec.rpggame.domain.world.Location;
 
 import static com.google.common.base.Preconditions.checkArgument;
 
 @Entity
-@AggregateRoot
 public class Enemy extends Character {
 
     static final int MIN_ENEMY_HIT_POINTS = 5;
@@ -20,7 +17,7 @@ public class Enemy extends Character {
     //Entity ID: locationInWorld
     private final int damage;
 
-    protected Enemy(Location locationInWorld, int hitPoints, int damage) {
+    Enemy(Location locationInWorld, int hitPoints, int damage) {
         super(locationInWorld, hitPoints);
         checkArgument(damage >= 0, "Enemy damage amount must be positive");
         this.damage = damage;
@@ -29,6 +26,11 @@ public class Enemy extends Character {
     @Override
     public int getAttackDamage() {
         return damage;
+    }
+
+    @Override
+    public void move(Location location) {
+        throw new UnsupportedOperationException("Enemy cannot be moved");
     }
 
     @Override

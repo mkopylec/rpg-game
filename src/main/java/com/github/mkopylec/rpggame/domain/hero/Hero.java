@@ -1,10 +1,11 @@
-package com.github.mkopylec.rpggame.domain.characters;
+package com.github.mkopylec.rpggame.domain.hero;
 
 import com.github.mkopylec.ddd.buildingblocks.AggregateRoot;
 import com.github.mkopylec.ddd.buildingblocks.Entity;
 import com.github.mkopylec.rpggame.domain.items.HealingPotion;
 import com.github.mkopylec.rpggame.domain.items.Item;
 import com.github.mkopylec.rpggame.domain.items.Sword;
+import com.github.mkopylec.rpggame.domain.world.Character;
 import com.github.mkopylec.rpggame.domain.world.Location;
 import org.springframework.data.annotation.Id;
 

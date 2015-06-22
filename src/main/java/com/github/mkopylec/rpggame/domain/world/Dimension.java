@@ -11,8 +11,8 @@ public class Dimension {
     private final int height;
 
     public Dimension(int width, int height) {
-        checkArgument(width > 0, "World width must be greater than 0");
-        checkArgument(height > 0, "World height must be greater than 0");
+        checkArgument(width > 0, "Width must be greater than 0");
+        checkArgument(height > 0, "Height must be greater than 0");
         this.width = width;
         this.height = height;
     }

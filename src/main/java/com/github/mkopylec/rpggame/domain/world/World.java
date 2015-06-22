@@ -2,7 +2,6 @@ package com.github.mkopylec.rpggame.domain.world;
 
 import com.github.mkopylec.ddd.buildingblocks.AggregateRoot;
 import com.github.mkopylec.ddd.buildingblocks.Entity;
-import com.github.mkopylec.rpggame.domain.characters.Enemy;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -29,16 +28,12 @@ public class World {
     private String heroName;
     private Set<Enemy> enemies = new HashSet<>();
 
-    protected World(Dimension dimension) {
+    World(Dimension dimension) {
         this.dimension = checkNotNull(dimension, "Worlds dimension not provided");
     }
 
     public UUID getId() {
         return id;
-    }
-
-    public Dimension getDimension() {
-        return dimension;
     }
 
     public int getWidth() {
@@ -49,20 +44,52 @@ public class World {
         return dimension.getHeight();
     }
 
-    public String getHeroName() {
+    public Set<Location> getSpawnedEnemiesLocations() {
+        Set<Location> locations = new HashSet<>(enemies.size());
+        for (Enemy enemy : enemies) {
+            locations.add(enemy.getLocationInWorld());
+        }
+        return unmodifiableSet(locations);
+    }
+
+    public String getSpawnedHeroName() {
         return heroName;
     }
 
-    public void spawnHero(String heroName) {
+    public boolean containsLocation(Location location) {
+        checkNotNull(location, "No world location provided");
+        return location.getX() < dimension.getWidth() &&
+                location.getY() < dimension.getHeight();
+    }
+
+    public boolean hasEnemyAtLocation(Location location) {
+        try {
+            return getEnemyAtLocation(location) != null;
+        } catch (IllegalArgumentException ex) {
+            return false;
+        }
+    }
+
+    public Enemy getEnemyAtLocation(Location location) {
+        checkNotNull(location, "World location not provided");
+        for (Enemy enemy : enemies) {
+            if (enemy.getLocationInWorld().equals(location)) {
+                return enemy;
+            }
+        }
+        throw new IllegalArgumentException("No enemy at provided world location");
+    }
+
+    Dimension getDimension() {
+        return dimension;
+    }
+
+    void spawnHero(String heroName) {
         checkArgument(isNotBlank(heroName), "Spawned hero name cannot be empty");
         this.heroName = heroName;
     }
 
-    public Set<Enemy> getSpawnedEnemies() {
-        return unmodifiableSet(enemies);
-    }
-
-    public void spawnEnemies(Set<Enemy> enemies) {
+    void spawnEnemies(Set<Enemy> enemies) {
         checkArgument(isNotEmpty(enemies), "No enemies provided to the world");
         this.enemies = enemies;
     }

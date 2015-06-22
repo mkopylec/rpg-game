@@ -1,4 +1,4 @@
-package com.github.mkopylec.rpggame.domain.characters;
+package com.github.mkopylec.rpggame.domain.hero;
 
 import com.github.mkopylec.ddd.buildingblocks.ValueObject;
 import com.github.mkopylec.rpggame.domain.items.Item;
@@ -17,11 +17,11 @@ class Backpack {
     @DBRef(lazy = true)
     private final List<Item> items = new ArrayList<>();
 
-    protected void putItem(Item item) {
+    void putItem(Item item) {
         items.add(checkNotNull(item, "Item not provided"));
     }
 
-    protected Item getItem(UUID itemId) {
+    Item getItem(UUID itemId) {
         checkNotNull(itemId, "Item id not provided");
         Item item = find(items, it -> it.getId().equals(itemId));
         checkNotNull(item, "Backpack does not contain an item with id: %s", itemId);

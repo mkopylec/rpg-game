@@ -1,8 +1,9 @@
-package com.github.mkopylec.rpggame.domain.characters;
+package com.github.mkopylec.rpggame.domain.services;
 
 import com.github.mkopylec.ddd.buildingblocks.DomainService;
-
-import static com.github.mkopylec.rpggame.domain.characters.BattleResult.fromCharacter;
+import com.github.mkopylec.rpggame.domain.hero.Hero;
+import com.github.mkopylec.rpggame.domain.world.Character;
+import com.github.mkopylec.rpggame.domain.world.Enemy;
 
 @DomainService
 public class BattleSimulator {
@@ -20,8 +21,8 @@ public class BattleSimulator {
         }
 
         return attacker.isAlive()
-                ? fromCharacter(attacker)
-                : fromCharacter(enemy);
+                ? BattleResult.fromCharacter(attacker)
+                : BattleResult.fromCharacter(enemy);
     }
 
     private boolean areOpponentsAlive(Hero hero, Enemy enemy) {

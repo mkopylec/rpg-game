@@ -1,16 +1,15 @@
-package com.github.mkopylec.rpggame.domain.characters;
+package com.github.mkopylec.rpggame.domain.world;
 
-import com.github.mkopylec.rpggame.domain.world.Location;
 import org.springframework.data.annotation.Transient;
 
 import static com.google.common.base.Preconditions.checkArgument;
 import static com.google.common.base.Preconditions.checkNotNull;
 import static com.google.common.base.Preconditions.checkState;
 
-abstract class Character {
+public abstract class Character {
 
     @Transient
-    private final Location locationInWorld;
+    private Location locationInWorld;
     private int hitPoints;
 
     protected Character(Location locationInWorld, int hitPoints) {
@@ -33,6 +32,10 @@ abstract class Character {
 
     public boolean isAlive() {
         return hitPoints > 0;
+    }
+
+    public void move(Location location) {
+        this.locationInWorld = checkNotNull(location, "Cannot move character because no location was provided");
     }
 
     protected void heal(int hitPointsBonus, int maxHitPoints) {

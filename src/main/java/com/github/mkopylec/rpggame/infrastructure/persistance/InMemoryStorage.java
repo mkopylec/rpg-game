@@ -1,4 +1,4 @@
-package com.github.mkopylec.rpggame.infrastructure.storage;
+package com.github.mkopylec.rpggame.infrastructure.persistance;
 
 import com.github.mkopylec.ddd.buildingblocks.InfrastructureService;
 
