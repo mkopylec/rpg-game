@@ -7,7 +7,7 @@ import static com.github.mkopylec.rpggame.domain.characters.BattleResult.fromCha
 @DomainService
 public class BattleSimulator {
 
-    public BattleResult pursueBattle(Hero hero, Enemy enemy) {
+    public BattleResult performBattle(Hero hero, Enemy enemy) {
         Character attacker = hero;
         Character defender = enemy;
 

@@ -6,23 +6,40 @@ import com.github.mkopylec.rpggame.domain.world.Location;
 import com.github.mkopylec.rpggame.infrastructure.random.RandomNumbersGenerator;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import java.util.HashSet;
+import java.util.Set;
+
+import static com.github.mkopylec.rpggame.domain.characters.Enemy.MAX_ENEMIES_IN_WORLD;
 import static com.github.mkopylec.rpggame.domain.characters.Enemy.MAX_ENEMY_DAMAGE;
 import static com.github.mkopylec.rpggame.domain.characters.Enemy.MAX_ENEMY_HIT_POINTS;
+import static com.github.mkopylec.rpggame.domain.characters.Enemy.MIN_ENEMIES_IN_WORLD;
 import static com.github.mkopylec.rpggame.domain.characters.Enemy.MIN_ENEMY_DAMAGE;
 import static com.github.mkopylec.rpggame.domain.characters.Enemy.MIN_ENEMY_HIT_POINTS;
 
 @Factory
 public class EnemyFactory {
 
-    @Autowired
-    private RandomNumbersGenerator numbersGenerator;
+    private final RandomNumbersGenerator numbersGenerator;
 
-    public Enemy createEnemy(Dimension worldDimension) {
-        return new Enemy(
-                getRandomLocation(worldDimension),
-                getRandomHitPoints(),
-                getRandomDamage()
-        );
+    @Autowired
+    public EnemyFactory(RandomNumbersGenerator numbersGenerator) {
+        this.numbersGenerator = numbersGenerator;
+    }
+
+    public Set<Enemy> createRandomNumberOfEnemies(Dimension worldDimension) {
+        int numberOfEnemies = numbersGenerator.getRandomInt(MIN_ENEMIES_IN_WORLD, MAX_ENEMIES_IN_WORLD);
+        Set<Enemy> enemies = new HashSet<>(numberOfEnemies);
+
+        for (int i = 0; i < numberOfEnemies; i++) {
+            Enemy enemy = new Enemy(
+                    getRandomLocation(worldDimension),
+                    getRandomHitPoints(),
+                    getRandomDamage()
+            );
+            enemies.add(enemy);
+        }
+
+        return enemies;
     }
 
     private Location getRandomLocation(Dimension worldDimension) {

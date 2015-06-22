@@ -12,8 +12,12 @@ import static com.github.mkopylec.rpggame.domain.world.World.MIN_WORLD_WIDTH;
 @Factory
 public class WorldFactory {
 
+    private final RandomNumbersGenerator numbersGenerator;
+
     @Autowired
-    private RandomNumbersGenerator numbersGenerator;
+    public WorldFactory(RandomNumbersGenerator numbersGenerator) {
+        this.numbersGenerator = numbersGenerator;
+    }
 
     public World createWorld() {
         return new World(getRandomDimension());

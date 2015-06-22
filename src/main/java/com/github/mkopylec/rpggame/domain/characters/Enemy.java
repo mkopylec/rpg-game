@@ -14,6 +14,8 @@ public class Enemy extends Character {
     static final int MAX_ENEMY_HIT_POINTS = 20;
     static final int MIN_ENEMY_DAMAGE = 1;
     static final int MAX_ENEMY_DAMAGE = 5;
+    static final int MIN_ENEMIES_IN_WORLD = 10;
+    static final int MAX_ENEMIES_IN_WORLD = 30;
 
     //Entity ID: locationInWorld
     private final int damage;
