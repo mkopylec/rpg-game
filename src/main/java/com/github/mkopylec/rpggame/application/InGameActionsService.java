@@ -3,7 +3,6 @@ package com.github.mkopylec.rpggame.application;
 import com.github.mkopylec.ddd.buildingblocks.ApplicationService;
 import com.github.mkopylec.rpggame.domain.hero.Hero;
 import com.github.mkopylec.rpggame.domain.hero.HeroRepository;
-import com.github.mkopylec.rpggame.domain.services.BattleResult;
 import com.github.mkopylec.rpggame.domain.services.BattleSimulator;
 import com.github.mkopylec.rpggame.domain.services.HeroExplorationHandler;
 import com.github.mkopylec.rpggame.domain.world.Enemy;
@@ -43,7 +42,7 @@ public class InGameActionsService {
 
         if (explorationHandler.isHeroEngagingEnemy(hero, world)) {
             Enemy enemy = world.getEnemyAtLocation(location);
-            BattleResult battleResult = battleSimulator.performBattle(hero, enemy);
+            battleSimulator.performBattle(hero, enemy);
         }
     }
 
