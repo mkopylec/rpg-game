@@ -38,6 +38,7 @@ public class InGameActionsService {
     public void moveHero(UUID worldId, Location location) {
         World world = worldRepository.findOne(worldId);
         Hero hero = heroRepository.findOne(world.getSpawnedHeroName());
+
         explorationHandler.moveHeroToNewLocation(hero, world, location);
 
         if (explorationHandler.isHeroEngagingEnemy(hero, world)) {

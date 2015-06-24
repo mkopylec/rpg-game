@@ -56,7 +56,11 @@ public class Enemy implements BattleParticipant {
         return locationInWorld;
     }
 
-    private boolean isDead() {
+    public boolean isPlacedAtLocation(Location location) {
+        return this.locationInWorld.equals(location);
+    }
+
+    public boolean isDead() {
         return !isAlive();
     }
 

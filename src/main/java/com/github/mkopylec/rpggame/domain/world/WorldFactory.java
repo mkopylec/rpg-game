@@ -1,7 +1,7 @@
 package com.github.mkopylec.rpggame.domain.world;
 
 import com.github.mkopylec.ddd.buildingblocks.Factory;
-import com.github.mkopylec.rpggame.infrastructure.random.RandomNumbersGenerator;
+import com.github.mkopylec.rpggame.domain.services.RandomNumbersGenerator;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.HashSet;

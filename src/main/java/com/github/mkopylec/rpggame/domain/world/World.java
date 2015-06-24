@@ -56,10 +56,20 @@ public class World {
         return heroName;
     }
 
+    public boolean hasSpawnedHero(String heroName) {
+        checkArgument(isNotBlank(heroName), "Spawned hero name cannot be empty");
+        return this.heroName.equals(heroName);
+    }
+
     public boolean containsLocation(Location location) {
         checkNotNull(location, "No world location provided");
         return location.getX() < dimension.getWidth() &&
                 location.getY() < dimension.getHeight();
+    }
+
+    public boolean hasSpawnedEnemy(Enemy enemy) {
+        checkNotNull(enemy, "Spawned enemy not provided");
+        return enemies.contains(enemy);
     }
 
     public boolean hasEnemyAtLocation(Location location) {
@@ -73,11 +83,17 @@ public class World {
     public Enemy getEnemyAtLocation(Location location) {
         checkNotNull(location, "World location not provided");
         for (Enemy enemy : enemies) {
-            if (enemy.getLocationInWorld().equals(location)) {
+            if (enemy.isPlacedAtLocation(location)) {
                 return enemy;
             }
         }
         throw new IllegalArgumentException("No enemy at provided world location");
+    }
+
+    public void removeDeadEnemy(Enemy enemy) {
+        checkNotNull(enemy, "Dead enemy not provided");
+        checkArgument(enemy.isDead(), "Cannot remove living enemy from the world");
+        enemies.remove(enemy);
     }
 
     Dimension getDimension() {
