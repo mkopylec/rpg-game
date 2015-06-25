@@ -1,7 +1,7 @@
 package com.github.mkopylec.rpggame.infrastructure.random;
 
 import com.github.mkopylec.ddd.buildingblocks.InfrastructureService;
-import com.github.mkopylec.rpggame.application.ProbabilityResolver;
+import com.github.mkopylec.rpggame.domain.services.ProbabilityResolver;
 
 import java.util.Random;
 

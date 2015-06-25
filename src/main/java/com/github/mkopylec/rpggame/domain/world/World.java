@@ -2,8 +2,11 @@ package com.github.mkopylec.rpggame.domain.world;
 
 import com.github.mkopylec.ddd.buildingblocks.AggregateRoot;
 import com.github.mkopylec.ddd.buildingblocks.Entity;
+import com.github.mkopylec.rpggame.domain.items.Item;
 
+import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
 
@@ -26,7 +29,9 @@ public class World {
     private final UUID id = randomUUID();//Entity ID
     private final Dimension dimension;
     private String heroName;
+    private Location heroLocation;
     private Set<Enemy> enemies = new HashSet<>();
+    private final Map<Location, Set<Item>> droppedItems = new HashMap<>();
 
     World(Dimension dimension) {
         this.dimension = checkNotNull(dimension, "Worlds dimension not provided");
@@ -44,6 +49,31 @@ public class World {
         return dimension.getHeight();
     }
 
+    public void placeDroppedItem(Location location, Item item) {
+        checkNotNull(location, "Item location not provided");
+        checkArgument(containsLocation(location), "Item location is out of the world");
+        if (!droppedItems.containsKey(location)) {
+            droppedItems.put(location, new HashSet<>());
+        }
+        droppedItems.get(location).add(checkNotNull(item, "Dropped item not provided"));
+    }
+
+    public Set<Item> getDroppedItems(Location itemsLocation) {
+        checkNotNull(itemsLocation, "Dropped items location not provided");
+        Set<Item> items = droppedItems.getOrDefault(itemsLocation, new HashSet<>());
+        return unmodifiableSet(items);
+    }
+
+    public boolean isHeroEngagingEnemy() {
+        return hasEnemyAtLocation(heroLocation);
+    }
+
+    public void moveHeroToNewLocation(Location newLocation) {
+        checkNotNull(newLocation, "New location not provided");
+        checkArgument(containsLocation(newLocation), "New location is out of the world");
+        heroLocation = newLocation;
+    }
+
     public Set<Location> getSpawnedEnemiesLocations() {
         Set<Location> locations = new HashSet<>(enemies.size());
         for (Enemy enemy : enemies) {
@@ -59,12 +89,6 @@ public class World {
     public boolean hasSpawnedHero(String heroName) {
         checkArgument(isNotBlank(heroName), "Spawned hero name cannot be empty");
         return this.heroName.equals(heroName);
-    }
-
-    public boolean containsLocation(Location location) {
-        checkNotNull(location, "No world location provided");
-        return location.getX() < dimension.getWidth() &&
-                location.getY() < dimension.getHeight();
     }
 
     public boolean hasSpawnedEnemy(Enemy enemy) {
@@ -108,5 +132,11 @@ public class World {
     void spawnEnemies(Set<Enemy> enemies) {
         checkArgument(isNotEmpty(enemies), "No enemies provided to the world");
         this.enemies = enemies;
+    }
+
+    private boolean containsLocation(Location location) {
+        checkNotNull(location, "No world location provided");
+        return location.getX() < dimension.getWidth() &&
+                location.getY() < dimension.getHeight();
     }
 }

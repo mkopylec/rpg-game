@@ -9,6 +9,7 @@ import java.util.List;
 import java.util.UUID;
 
 import static com.google.common.base.Preconditions.checkNotNull;
+import static java.util.Collections.unmodifiableList;
 import static org.apache.commons.collections4.CollectionUtils.find;
 
 @ValueObject
@@ -28,5 +29,9 @@ class Backpack {
         items.remove(item);
 
         return item;
+    }
+
+    List<Item> getItems() {
+        return unmodifiableList(items);
     }
 }

@@ -23,13 +23,17 @@ public class Enemy implements BattleParticipant {
     private final Location locationInWorld;//Entity ID
     private final int damage;
     private int hitPoints;
+    private final boolean dropHealingPotion;
+    private final boolean dropSword;
 
-    Enemy(Location locationInWorld, int hitPoints, int damage) {
+    Enemy(Location locationInWorld, int hitPoints, int damage, boolean dropHealingPotion, boolean dropSword) {
         checkArgument(hitPoints > 0, "Enemy hit points amount must be greater than 0");
         checkArgument(damage >= 0, "Enemy damage amount must be positive");
         this.locationInWorld = checkNotNull(locationInWorld, "No enemy location provided");
         this.hitPoints = hitPoints;
         this.damage = damage;
+        this.dropHealingPotion = dropHealingPotion;
+        this.dropSword = dropSword;
     }
 
     @Override
@@ -56,12 +60,20 @@ public class Enemy implements BattleParticipant {
         return locationInWorld;
     }
 
-    public boolean isPlacedAtLocation(Location location) {
+    boolean isPlacedAtLocation(Location location) {
         return this.locationInWorld.equals(location);
     }
 
-    public boolean isDead() {
+    boolean isDead() {
         return !isAlive();
+    }
+
+    boolean shouldDropHealingPotion() {
+        return dropHealingPotion;
+    }
+
+    boolean shouldDropSword() {
+        return dropSword;
     }
 
     private void notifyAboutDeath() {

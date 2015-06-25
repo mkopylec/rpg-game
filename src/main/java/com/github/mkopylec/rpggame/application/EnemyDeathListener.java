@@ -2,9 +2,9 @@ package com.github.mkopylec.rpggame.application;
 
 import com.github.mkopylec.rpggame.domain.items.Item;
 import com.github.mkopylec.rpggame.domain.items.ItemFactory;
-import com.github.mkopylec.rpggame.domain.items.ItemRepository;
 import com.github.mkopylec.rpggame.domain.world.Enemy;
 import com.github.mkopylec.rpggame.domain.world.EnemyDeathEvent;
+import com.github.mkopylec.rpggame.domain.world.Location;
 import com.github.mkopylec.rpggame.domain.world.World;
 import com.github.mkopylec.rpggame.domain.world.WorldRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,52 +16,39 @@ import java.util.function.Supplier;
 @Component
 public class EnemyDeathListener implements ApplicationListener<EnemyDeathEvent> {
 
-    private static final int CHANCE_TO_DROP_HEALING_POTION = 15;
-    private static final int CHANCE_TO_DROP_SWORD = 10;
-
     private final ItemFactory itemFactory;
-    private final ItemRepository itemRepository;
-    private final ProbabilityResolver probabilityResolver;
     private final WorldRepository worldRepository;
 
     @Autowired
-    public EnemyDeathListener(
-            ItemFactory itemFactory,
-            ItemRepository itemRepository,
-            ProbabilityResolver probabilityResolver,
-            WorldRepository worldRepository
-    ) {
+    public EnemyDeathListener(ItemFactory itemFactory, WorldRepository worldRepository) {
         this.itemFactory = itemFactory;
-        this.itemRepository = itemRepository;
-        this.probabilityResolver = probabilityResolver;
         this.worldRepository = worldRepository;
     }
 
     @Override
     public void onApplicationEvent(EnemyDeathEvent event) {
-        tryToDropHealingPotion();
-        tryToDropSword();
-        removeDeadEnemyFromWorld(event.getDeadEnemy());
-    }
+        Enemy deadEnemy = event.getDeadEnemy();
+        World deadEnemyWorld = worldRepository.findByEnemy(deadEnemy);
 
-    private void tryToDropHealingPotion() {
-        tryToDropItem(CHANCE_TO_DROP_HEALING_POTION, itemFactory::createHealingPotion);
-    }
-
-    private void tryToDropSword() {
-        tryToDropItem(CHANCE_TO_DROP_SWORD, itemFactory::createSword);
-    }
-
-    private void removeDeadEnemyFromWorld(Enemy enemy) {
-        World deadEnemyWorld = worldRepository.findByEnemy(enemy);
-        deadEnemyWorld.removeDeadEnemy(enemy);
-    }
-
-    private <I extends Item> void tryToDropItem(int chanceToDrop, Supplier<I> itemCreator) {
-        boolean shouldDropItem = probabilityResolver.makeATry(chanceToDrop);
-        if (shouldDropItem) {
-            I item = itemCreator.get();
-            itemRepository.save(item);
+        if (event.shouldDropHealingPotion()) {
+            dropHealingPotion(deadEnemyWorld, deadEnemy.getLocationInWorld());
         }
+        if (event.shouldDropSword()) {
+            dropSword(deadEnemyWorld, deadEnemy.getLocationInWorld());
+        }
+        deadEnemyWorld.removeDeadEnemy(deadEnemy);
+    }
+
+    private void dropHealingPotion(World world, Location potionLocation) {
+        dropItem(world, potionLocation, itemFactory::createHealingPotion);
+    }
+
+    private void dropSword(World world, Location swordLocation) {
+        dropItem(world, swordLocation, itemFactory::createSword);
+    }
+
+    private <I extends Item> void dropItem(World world, Location itemLocation, Supplier<I> itemCreator) {
+        I item = itemCreator.get();
+        world.placeDroppedItem(itemLocation, item);
     }
 }

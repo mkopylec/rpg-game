@@ -20,10 +20,6 @@ public class WorldInfo {
         this.enemyLocations = enemyLocations;
     }
 
-    private void addEnemyLocation(Location location) {
-        enemyLocations.add(location);
-    }
-
     static WorldInfo fromWorld(World world) {
         return new WorldInfo(
                 world.getId(),

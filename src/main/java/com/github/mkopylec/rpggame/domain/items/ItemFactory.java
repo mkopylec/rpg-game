@@ -28,4 +28,8 @@ public class ItemFactory {
         int damage = numbersGenerator.getRandomInt(MIN_SWORD_DAMAGE, MAX_SWORD_DAMAGE);
         return new Sword(damage);
     }
+
+    public Sword createStartingSword() {
+        return new Sword(MIN_SWORD_DAMAGE);
+    }
 }

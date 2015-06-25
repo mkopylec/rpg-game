@@ -1,4 +1,4 @@
-package com.github.mkopylec.rpggame.application;
+package com.github.mkopylec.rpggame.domain.services;
 
 public interface ProbabilityResolver {
 

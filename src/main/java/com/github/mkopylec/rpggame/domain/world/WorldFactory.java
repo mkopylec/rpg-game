@@ -1,6 +1,7 @@
 package com.github.mkopylec.rpggame.domain.world;
 
 import com.github.mkopylec.ddd.buildingblocks.Factory;
+import com.github.mkopylec.rpggame.domain.services.ProbabilityResolver;
 import com.github.mkopylec.rpggame.domain.services.RandomNumbersGenerator;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -21,11 +22,16 @@ import static com.github.mkopylec.rpggame.domain.world.World.MIN_WORLD_WIDTH;
 @Factory
 public class WorldFactory {
 
+    private static final int CHANCE_TO_DROP_HEALING_POTION = 15;
+    private static final int CHANCE_TO_DROP_SWORD = 10;
+
     private final RandomNumbersGenerator numbersGenerator;
+    private final ProbabilityResolver probabilityResolver;
 
     @Autowired
-    public WorldFactory(RandomNumbersGenerator numbersGenerator) {
+    public WorldFactory(RandomNumbersGenerator numbersGenerator, ProbabilityResolver probabilityResolver) {
         this.numbersGenerator = numbersGenerator;
+        this.probabilityResolver = probabilityResolver;
     }
 
     public World createWorld(String heroName) {
@@ -51,7 +57,9 @@ public class WorldFactory {
             Enemy enemy = new Enemy(
                     getRandomLocation(worldDimension),
                     getRandomHitPoints(),
-                    getRandomDamage()
+                    getRandomDamage(),
+                    shouldDropHealingPotion(),
+                    shouldDropSword()
             );
             enemies.add(enemy);
         }
@@ -71,5 +79,13 @@ public class WorldFactory {
 
     private int getRandomDamage() {
         return numbersGenerator.getRandomInt(MIN_ENEMY_DAMAGE, MAX_ENEMY_DAMAGE);
+    }
+
+    private boolean shouldDropHealingPotion() {
+        return probabilityResolver.makeATry(CHANCE_TO_DROP_HEALING_POTION);
+    }
+
+    private boolean shouldDropSword() {
+        return probabilityResolver.makeATry(CHANCE_TO_DROP_SWORD);
     }
 }

@@ -10,6 +10,14 @@ public class EnemyDeathEvent extends ApplicationEvent {
         super(source);
     }
 
+    public boolean shouldDropHealingPotion() {
+        return ((Enemy) getSource()).shouldDropHealingPotion();
+    }
+
+    public boolean shouldDropSword() {
+        return ((Enemy) getSource()).shouldDropSword();
+    }
+
     public Enemy getDeadEnemy() {
         return (Enemy) getSource();
     }

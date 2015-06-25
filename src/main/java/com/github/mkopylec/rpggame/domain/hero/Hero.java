@@ -6,10 +6,9 @@ import com.github.mkopylec.rpggame.domain.items.HealingPotion;
 import com.github.mkopylec.rpggame.domain.items.Item;
 import com.github.mkopylec.rpggame.domain.items.Sword;
 import com.github.mkopylec.rpggame.domain.services.BattleParticipant;
-import com.github.mkopylec.rpggame.domain.world.Location;
 import org.springframework.data.annotation.Id;
-import org.springframework.data.annotation.Transient;
 
+import java.util.List;
 import java.util.UUID;
 
 import static com.google.common.base.Preconditions.checkArgument;
@@ -22,20 +21,18 @@ import static org.springframework.web.context.ContextLoader.getCurrentWebApplica
 @AggregateRoot
 public class Hero implements BattleParticipant {
 
-    private static final int STARTING_SWORD_DAMAGE = 1;
     private static final int MAX_HIT_POINTS = 100;
 
     @Id
     private final String name;//Entity ID
-    private Sword equippedSword = new Sword(STARTING_SWORD_DAMAGE);
+    private Sword equippedSword;
     private final Backpack backpack = new Backpack();
     private int hitPoints = MAX_HIT_POINTS;
-    @Transient
-    private Location locationInWorld = new Location();
 
-    public Hero(String name) {
+    public Hero(String name, Sword equippedSword) {
         checkArgument(isNotBlank(name), "Empty hero name");
         this.name = name;
+        this.equippedSword = checkNotNull(equippedSword, "Sword to equip by hero not provided");
     }
 
     @Override
@@ -62,23 +59,11 @@ public class Hero implements BattleParticipant {
         return name;
     }
 
-    public Location getLocationInWorld() {
-        return locationInWorld;
-    }
-
-    public void move(Location location) {
-        this.locationInWorld = checkNotNull(location, "Cannot move hero because no location was provided");
-    }
-
     public void equipSword(UUID swordId) {
         Item item = backpack.getItem(swordId);
         checkArgument(item instanceof Sword, "Item with id: %s is not a sword", swordId);
+        takeOfEquippedSword();
         this.equippedSword = (Sword) item;
-    }
-
-    public void takeOfEquippedSword() {
-        backpack.putItem(equippedSword);
-        equippedSword = null;
     }
 
     public void drinkHealingPotion(UUID potionId) {
@@ -86,6 +71,15 @@ public class Hero implements BattleParticipant {
         checkArgument(item instanceof HealingPotion, "Item with id: %s is not a healing potion", potionId);
         HealingPotion potion = (HealingPotion) item;
         heal(potion.getHitPointsBonus());
+    }
+
+    public List<Item> getBackpackItems() {
+        return backpack.getItems();
+    }
+
+    private void takeOfEquippedSword() {
+        backpack.putItem(equippedSword);
+        equippedSword = null;
     }
 
     private boolean isDead() {
