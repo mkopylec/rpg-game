@@ -8,6 +8,7 @@ import org.springframework.stereotype.Component;
 
 import java.util.Collection;
 import java.util.UUID;
+import java.util.function.Predicate;
 
 import static com.google.common.base.Preconditions.checkArgument;
 import static com.google.common.base.Preconditions.checkNotNull;
@@ -39,30 +40,28 @@ public class WorldRepositoryImpl implements WorldRepository {
     @Override
     public World findByHeroName(String heroName) {
         checkArgument(isNotBlank(heroName), "Empty hero name");
-        Collection<Object> allObjects = storage.getAll();
-        return (World) find(allObjects, object -> {
-            if (object instanceof World) {
-                return ((World) object).hasSpawnedHero(heroName);
-            }
-            return false;
-        });
+        return getWorld(world -> world.hasSpawnedHero(heroName));
     }
 
     @Override
     public World findByEnemy(Enemy enemy) {
         checkNotNull(enemy, "Enemy not provided");
-        Collection<Object> allObjects = storage.getAll();
-        return (World) find(allObjects, object -> {
-            if (object instanceof World) {
-                return ((World) object).hasSpawnedEnemy(enemy);
-            }
-            return false;
-        });
+        return getWorld(world -> world.hasSpawnedEnemy(enemy));
     }
 
     @Override
     public void delete(World world) {
         checkNotNull(world, "World not provided");
         storage.remove(world.getId());
+    }
+
+    private World getWorld(Predicate<World> queryCondition) {
+        Collection<Object> allObjects = storage.getAll();
+        return (World) find(allObjects, object -> {
+            if (object instanceof World) {
+                return queryCondition.test((World) object);
+            }
+            return false;
+        });
     }
 }
